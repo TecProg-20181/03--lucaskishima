@@ -10,7 +10,7 @@ class Word():
         self.letters_guessed = []
         self.guesses = guesses
 
-    def loadWords(self):
+    def loadWords(self, guesses):
         """
         Depending on the size of the word list, this function may
         take a while to finish.
@@ -25,53 +25,68 @@ class Word():
         wordlist = str.split(read_data)
 
         print ("  ", len(wordlist), "words loaded.")
-        return random.choice(wordlist)
+        word = random.choice(wordlist)
 
-    def guessLetter(self, letter, secretWord, lettersGuessed, guesses):
-        if letter in lettersGuessed:
+        while len(word) > guesses:
+            word = random.choice(wordlist)
 
-            guessed = self.guessedLetters(secretWord, lettersGuessed)
+        return word
+
+    def guessLetter(self, letter, secret_word, letters_guessed, guesses):
+        if letter in letters_guessed:
+
+            guessed = self.guessedLetters(secret_word, letters_guessed)
 
             print('Oops! You have already guessed that letter: ', guessed)
-        elif letter in secretWord:
-            lettersGuessed.append(letter)
+        elif letter in secret_word:
+            letters_guessed.append(letter)
 
-            guessed = self.guessedLetters(secretWord, lettersGuessed)
+            guessed = self.guessedLetters(secret_word, letters_guessed)
 
             print('Good Guess: ', guessed)
         else:
             self.guesses -=1
-            lettersGuessed.append(letter)
+            letters_guessed.append(letter)
 
-            guessed = self.guessedLetters(secretWord, lettersGuessed)
+            guessed = self.guessedLetters(secret_word, letters_guessed)
 
             print('Oops! That letter is not in my word: ',  guessed)
         print('------------')
 
         return guessed
 
-    def isWordGuessed(self, secretWord, lettersGuessed):
+    def isWordGuessed(self, secret_word, letters_guessed):
         secretLetters = []
 
-        for letter in secretWord:
-            if letter in lettersGuessed:
+        for letter in secret_word:
+            if letter in letters_guessed:
                 pass
             else:
                 return False
 
         return True
 
-    def guessedLetters(self, secretWord, lettersGuessed):
+    def guessedLetters(self, secret_word, letters_guessed):
 
         guessed = self.getGuessedWord()
 
-        for letter in secretWord:
-            if letter in lettersGuessed:
+        for letter in secret_word:
+            if letter in letters_guessed:
                 guessed += letter
             else:
                 guessed += '_ '
 
         return guessed
+
+    def countDifferentLetters(self, word):
+        auxiliar_word = []
+
+        for letter in word:
+            if letter not in auxiliar_word:
+                auxiliar_word.append(letter)
+        different_letters = len(auxiliar_word)
+
+        return different_letters
 
     def getGuessedWord(self):
 
