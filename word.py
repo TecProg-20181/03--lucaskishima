@@ -1,5 +1,7 @@
 import random
 import string
+import sys
+import os
 
 WORDLIST_FILENAME = "words.txt"
 
@@ -18,15 +20,26 @@ class Word():
         print("Loading word list from file...")
 
         # opening and reading file.
-        with open(WORDLIST_FILENAME) as inFile:
-            read_data = inFile.read()
+        try:
+            with open(WORDLIST_FILENAME) as inFile:
+                read_data = inFile.read()
+        except FileNotFoundError:
+            print('File not found')
+            print('Exiting program...\n')
+            sys.exit(1)
 
         # wordlist: list of strings
         wordlist = str.split(read_data)
 
-        print ("  ", len(wordlist), "words loaded.")
-        word = random.choice(wordlist)
+        try:
+            word = random.choice(wordlist)
+        except:
+            print('Empty file\n')
+            print('Exiting...')
+            sys.exit(1)
 
+        print ("  ", len(wordlist), "words loaded.")
+        
         while len(word) > guesses:
             word = random.choice(wordlist)
 
@@ -51,7 +64,6 @@ class Word():
             guessed = self.guessedLetters(secret_word, letters_guessed)
 
             print('Oops! That letter is not in my word: ',  guessed)
-        print('------------')
 
         return guessed
 
@@ -100,3 +112,27 @@ class Word():
         available = string.ascii_lowercase
 
         return available
+
+    def validate_letter(self):
+
+        letter = input('Please guess a letter: ')
+        size = self.validate_size_letter(letter)
+
+        while size is False:
+            letter = input('Please guess only a single letter: ')
+            size = self.validate_size_letter(letter)
+
+        if letter.isalpha():
+            pass
+        else:
+            print ('A letter must be an alphabetical character.')
+            letter = self.validate_letter()
+
+        return letter
+
+    def validate_size_letter(self, letter):
+
+        if ((len(letter) == 1) or (len(letter) == 0)):
+            return True
+        else:
+            return False

@@ -1,4 +1,4 @@
-from word import Word
+from word import *
 
 def hangman():
 
@@ -9,7 +9,7 @@ def hangman():
     secret_word = word.loadWords(guesses).lower()
     number_of_different_letters = word.countDifferentLetters(secret_word)
 
-    print('Welcome to the game, Hangam!')
+    print('Welcome to the game, Hangman!')
     print('I am thinking of a word that is', len(secret_word), 'letters long and have',
           number_of_different_letters, 'different letters.')
     print('-------------------------------------------------------------------')
@@ -23,7 +23,7 @@ def hangman():
                 available = available.replace(letter, '')
 
         print ('Available letters', available)
-        letter = input('Please guess a letter: ')
+        letter = word.validate_letter()
         guessed = word.guessLetter(letter, secret_word, letters_guessed, guesses)
 
     else:
